@@ -66,8 +66,10 @@ def prep_text(text: str, background_color: tuple[int, int, int], **locations):
 
 (boost_text, boost_rect) = prep_text(f"Boost: (boost_level)", ORANGE, topright=(WINDOW_WIDTH - 10, 50))
 
-(game_over_text, game_over_rect) = prep_text(f"FINAL SCORE: {score}", ORANGE, center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
-(continue_text, continue_rect) = prep_text("Press any key to play again", ORANGE, center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 64))
+(game_over_text, game_over_rect) = prep_text(f"FINAL SCORE: {score}", ORANGE,
+                                             center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
+(continue_text, continue_rect) = prep_text("Press any key to play again", ORANGE,
+                                           center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 64))
 
 # Set sounds and music
 bark_sound = pygame.mixer.Sound("Assets/Sound Effects/bark_sound.wav")
@@ -128,12 +130,11 @@ def engage_boost(keys):
         player_velocity = PLAYER_NORMAL_VELOCITY
 
 
-
 def move_burger():
     global burger_velocity
     global burger_points
     burger_rect.y += burger_velocity
-    burger_velocity += BURGER_ACCELERATION
+    burger_points = int(burger_velocity * (WINDOW_HEIGHT - burger_rect.y + 100))
 
 
 def handle_miss():
@@ -156,8 +157,7 @@ def check_collisions():
     global burgers_eaten
     global boost_level
     if player_rect.colliderect(burger_rect):
-        burger_points += 10
-        score += 10
+        score += burger_points
         burgers_eaten += 1
         bark_sound.play()
         burger_rect.topleft = (random.randint(0, WINDOW_WIDTH - 32), BUFFER_DISTANCE)
@@ -206,6 +206,7 @@ def check_game_over():
 def display_hud():
     display_surface.fill(BLACK)
     display_surface.blit(points_text, points_rect)
+    display_surface.blit(lives_text, lives_rect)
     display_surface.blit(score_text, score_rect)
     display_surface.blit(title_text, title_rect)
     display_surface.blit(eaten_text, eaten_rect)
