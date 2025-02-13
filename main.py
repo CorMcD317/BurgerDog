@@ -35,7 +35,6 @@ WHITE = (255, 255, 255)
 font = pygame.font.Font('Assets/Text_Accent/WashYourHand.ttf', 32)
 
 
-
 def prep_text(text: str, background_color: tuple[int, int, int], **locations):
     text_to_return = font.render(text, True, background_color)
     rect = text_to_return.get_rect()
@@ -45,13 +44,10 @@ def prep_text(text: str, background_color: tuple[int, int, int], **locations):
             rect.topleft = locations["topleft"]
         elif location == "centerx":
             rect.centerx = locations["centerx"]
-        # TODO: (2025-02-06): add this elif portion
         elif location == "y":
             rect.y = locations["y"]
-        # TODO: (2025-02-06): add this elif portion
         elif location == "topright":
             rect.topright = locations["topright"]
-        # TODO: (2025-02-06): add this elif portion
         elif location == "center":
             rect.center = locations["center"]
     return text_to_return, rect
@@ -71,7 +67,6 @@ def prep_text(text: str, background_color: tuple[int, int, int], **locations):
 (boost_text, boost_rect) = prep_text(f"Boost: (boost_level)", ORANGE, topright=(WINDOW_WIDTH - 10, 50))
 
 (game_over_text, game_over_rect) = prep_text(f"FINAL SCORE: {score}", ORANGE, center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
-
 (continue_text, continue_rect) = prep_text("Press any key to play again", ORANGE, center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 64))
 
 # Set sounds and music
@@ -105,7 +100,6 @@ def check_quit():
             break
 
 
-
 def move_player():
     global player_image
     global player_velocity
@@ -113,14 +107,11 @@ def move_player():
     if keys[pygame.K_LEFT] and player_rect.left > 0:
         player_velocity -= player_rect.x
         player_image = player_image_left
-
     if keys[pygame.K_RIGHT] and player_rect.right < WINDOW_WIDTH:
         player_velocity += player_rect.x
         player_image = player_image_right
-
     if keys[pygame.K_UP] and player_rect.top > 100:
         player_velocity -= player_rect.y
-
     if keys[pygame.K_DOWN] and player_rect.bottom < WINDOW_HEIGHT:
         player_velocity += player_rect.y
 
@@ -135,12 +126,12 @@ def engage_boost(keys):
     else:
         player_velocity = PLAYER_NORMAL_VELOCITY
 
+
 def move_burger():
     global burger_velocity
     global burger_points
     burger_velocity += burger_rect.y
     burger_points = int(burger_velocity * (WINDOW_HEIGHT - burger_rect.y + 100))
-
 
 
 def handle_miss():
@@ -215,16 +206,17 @@ def display_hud():
     display_surface.blit(points_text, points_rect)
     display_surface.blit(score_text, score_rect)
     display_surface.blit(title_text, title_rect)
-    display_surface.blit(eaten_text, lives_rect)
+    display_surface.blit(eaten_text, eaten_rect)
     display_surface.blit(boost_text, boost_rect)
     pygame.draw.line(display_surface, WHITE, (0, 100), (WINDOW_WIDTH, 100), 3)
-    player_image.blit(player_image, player_rect)
-    burger_image.blit(burger_image, burger_rect)
+    display_surface.blit(player_image, player_rect)
+    display_surface.blit(burger_image, burger_rect)
 
 
 def handle_clock():
     pygame.display.update()
     clock.tick(FPS)
+
 
 while running:
     check_quit()
