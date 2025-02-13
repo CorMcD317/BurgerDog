@@ -105,15 +105,15 @@ def move_player():
     global player_velocity
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and player_rect.left > 0:
-        player_velocity -= player_rect.x
+        player_rect.x -= player_velocity
         player_image = player_image_left
     if keys[pygame.K_RIGHT] and player_rect.right < WINDOW_WIDTH:
-        player_velocity += player_rect.x
+        player_rect.x += player_velocity
         player_image = player_image_right
     if keys[pygame.K_UP] and player_rect.top > 100:
-        player_velocity -= player_rect.y
+        player_rect.y -= player_velocity
     if keys[pygame.K_DOWN] and player_rect.bottom < WINDOW_HEIGHT:
-        player_velocity += player_rect.y
+        player_rect.y += player_velocity
 
     engage_boost(keys)
 
@@ -123,15 +123,17 @@ def engage_boost(keys):
     global player_velocity
     if keys[pygame.K_SPACE] and boost_level > 0:
         boost_level -= 1
+        player_velocity = PLAYER_BOOST_VELOCITY
     else:
         player_velocity = PLAYER_NORMAL_VELOCITY
+
 
 
 def move_burger():
     global burger_velocity
     global burger_points
-    burger_velocity += burger_rect.y
-    burger_points = int(burger_velocity * (WINDOW_HEIGHT - burger_rect.y + 100))
+    burger_rect.y += burger_velocity
+    burger_velocity += BURGER_ACCELERATION
 
 
 def handle_miss():
@@ -152,10 +154,10 @@ def check_collisions():
     global burger_points
     global score
     global burgers_eaten
-    global BURGER_ACCELERATION
     global boost_level
     if player_rect.colliderect(burger_rect):
-        burger_points += score
+        burger_points += 10
+        score += 10
         burgers_eaten += 1
         bark_sound.play()
         burger_rect.topleft = (random.randint(0, WINDOW_WIDTH - 32), BUFFER_DISTANCE)
